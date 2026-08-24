@@ -1,5 +1,7 @@
 # Meridian Clinic — Healthcare Appointment & Follow-up Manager
 
+Application Host URL : https://healthcare-appointment-production-324d.up.railway.app
+
 A full-stack clinic platform with separate portals for **patients**, **doctors**, and an **admin**.
 Patients book appointments and submit symptoms in advance; doctors get an AI-generated pre-visit
 brief and produce a patient-friendly post-visit summary; both sides stay in sync via email and
