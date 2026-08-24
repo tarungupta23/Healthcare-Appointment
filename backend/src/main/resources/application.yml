@@ -1,0 +1,96 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: healthcare-appointment-manager
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:appointment_manager}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  jackson:
+    default-property-inclusion: non_null
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-this-super-secret-key-must-be-at-least-256-bits-long-please}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}   # 24 hours
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  mail:
+    from: ${MAIL_FROM:noreply@clinic.example.com}
+    max-retries: ${MAIL_MAX_RETRIES:3}
+  slot:
+    hold-duration-minutes: ${SLOT_HOLD_MINUTES:5}
+  llm:
+    provider: ${LLM_PROVIDER:gemini}   # "gemini" (free, default), "groq" (free, fast), or "anthropic"
+    max-tokens: ${LLM_MAX_TOKENS:1024}
+    timeout-seconds: ${LLM_TIMEOUT_SECONDS:15}
+    max-retries: ${LLM_MAX_RETRIES:2}
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
+      api-url: ${GEMINI_API_URL:https://generativelanguage.googleapis.com/v1beta/models}
+      model: ${GEMINI_MODEL:gemini-2.5-flash}
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      api-url: ${GROQ_API_URL:https://api.groq.com/openai/v1/chat/completions}
+      model: ${GROQ_MODEL:llama-3.3-70b-versatile}
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      api-url: ${ANTHROPIC_API_URL:https://api.anthropic.com/v1/messages}
+      model: ${ANTHROPIC_MODEL:claude-sonnet-4-6}
+  google:
+    calendar:
+      client-id: ${GOOGLE_CLIENT_ID:}
+      client-secret: ${GOOGLE_CLIENT_SECRET:}
+      redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:8080/api/auth/google/callback}
+      application-name: Healthcare Appointment Manager
+
+logging:
+  level:
+    root: INFO
+    com.clinic.appointment: DEBUG
+    org.springframework.security: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
