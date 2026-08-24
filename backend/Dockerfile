@@ -18,4 +18,5 @@ COPY --from=build /app/target/appointment-manager-1.0.0.jar app.jar
 ENV SERVER_PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT:-8080}"]
+# Standard Spring Boot ENTRYPOINT
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -Dserver.address=0.0.0.0 -jar app.jar"]
