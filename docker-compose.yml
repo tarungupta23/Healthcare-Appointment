@@ -1,0 +1,31 @@
+version: "3.8"
+
+# Convenience file for local development / evaluation - spins up MySQL only.
+# Run the Spring Boot backend and Vite frontend directly on the host (see
+# README) so hot-reload and debugging work normally.
+#
+# Usage:
+#   docker compose up -d
+#   (wait a few seconds for MySQL to be healthy)
+#   cd backend && ./mvnw spring-boot:run
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: appointment-manager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appointment_manager
+    ports:
+      - "3306:3306"
+    volumes:
+      - appointment_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  appointment_mysql_data:
